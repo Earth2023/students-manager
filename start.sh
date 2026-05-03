@@ -3,6 +3,7 @@ set -e
 
 REPO_URL="https://github.com/Earth2023/students-manager.git"
 APP_DIR="students-manager"
+GIT_CMD="git -c http.sslVerify=false"
 
 echo "================================================"
 echo "  学生信息管理系统 — 安装/启动器"
@@ -11,12 +12,10 @@ echo ""
 
 if [ ! -d "$APP_DIR" ]; then
     echo "正在从远程仓库拉取代码 ..."
-    git clone "$REPO_URL" "$APP_DIR"
+    $GIT_CMD clone "$REPO_URL" "$APP_DIR"
 else
     echo "正在更新代码 ..."
-    cd "$APP_DIR"
-    git pull
-    cd ..
+    $GIT_CMD -C "$APP_DIR" pull
 fi
 
 cd "$APP_DIR"
