@@ -5,9 +5,22 @@ from app.core.deps import get_current_user
 from app.database import get_db
 from app.models.student import Student, StudentClass
 from app.models.teacher import Teacher
-from app.schemas.student import StudentCreate, StudentInfo, StudentUpdate
+from app.schemas.student import StudentClassInfo, StudentCreate, StudentInfo, StudentUpdate
 
 router = APIRouter(prefix="/api/students", tags=["学生"])
+
+
+def _attach_classes(student, db):
+    """Populate the classes field on a StudentInfo from the DB."""
+    rows = (
+        db.query(StudentClass)
+        .filter(StudentClass.student_id == student.id)
+        .all()
+    )
+    return [
+        StudentClassInfo(id=r.class_group.id, name=r.class_group.name, grade=r.class_group.grade)
+        for r in rows
+    ]
 
 
 @router.get("/search", response_model=list[StudentInfo])
@@ -26,7 +39,13 @@ def search_students(
         query = query.filter(
             Student.name.ilike(like) | Student.student_no.ilike(like)
         )
-    return query.order_by(Student.student_no).limit(50).all()
+    students = query.order_by(Student.student_no).limit(50).all()
+    result = []
+    for s in students:
+        info = StudentInfo.model_validate(s)
+        info.classes = _attach_classes(s, db)
+        result.append(info)
+    return result
 
 
 @router.post("", response_model=StudentInfo, status_code=status.HTTP_201_CREATED)
@@ -45,7 +64,9 @@ def create_student(
         db.add(StudentClass(student_id=student.id, class_id=class_id))
     db.commit()
     db.refresh(student)
-    return student
+    info = StudentInfo.model_validate(student)
+    info.classes = _attach_classes(student, db)
+    return info
 
 
 @router.get("/{student_id}", response_model=StudentInfo)
@@ -57,7 +78,9 @@ def get_student(
     student = db.query(Student).filter(Student.id == student_id).first()
     if not student:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="学生不存在")
-    return student
+    info = StudentInfo.model_validate(student)
+    info.classes = _attach_classes(student, db)
+    return info
 
 
 @router.put("/{student_id}", response_model=StudentInfo)
@@ -75,7 +98,9 @@ def update_student(
         setattr(student, key, value)
     db.commit()
     db.refresh(student)
-    return student
+    info = StudentInfo.model_validate(student)
+    info.classes = _attach_classes(student, db)
+    return info
 
 
 @router.delete("/{student_id}", status_code=status.HTTP_204_NO_CONTENT)

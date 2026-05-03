@@ -173,7 +173,14 @@ POST /students?class_id=1
   "address": "",
   "parent_name": "明爸爸",
   "parent_phone": "13900139000",
-  "notes": ""
+  "notes": "",
+  "classes": [
+    {
+      "id": 1,
+      "name": "三年级一班",
+      "grade": "三年级"
+    }
+  ]
 }
 ```
 
@@ -182,6 +189,8 @@ POST /students?class_id=1
 ```
 GET /students/{student_id}
 ```
+
+**响应 200** 结构同上，包含 `classes` 字段。
 
 ### 更新学生信息
 
@@ -220,7 +229,13 @@ GET /students/search?q=关键字&class_id=1
     "id": 1,
     "student_no": "2024001",
     "name": "小明",
-    ...
+    "classes": [
+      {
+        "id": 1,
+        "name": "三年级一班",
+        "grade": "三年级"
+      }
+    ]
   }
 ]
 ```

@@ -22,7 +22,18 @@
         <el-input v-model="form.name" placeholder="如：三年级一班" />
       </el-form-item>
       <el-form-item label="年级">
-        <el-input v-model="form.grade" placeholder="如：三年级" />
+        <el-select v-model="form.grade" placeholder="请选择年级" style="width: 100%">
+          <el-option label="一年级" value="一年级" />
+          <el-option label="二年级" value="二年级" />
+          <el-option label="三年级" value="三年级" />
+          <el-option label="四年级" value="四年级" />
+          <el-option label="五年级" value="五年级" />
+          <el-option label="六年级" value="六年级" />
+          <el-option label="七年级" value="七年级" />
+          <el-option label="八年级" value="八年级" />
+          <el-option label="九年级" value="九年级" />
+          <el-option label="其他" value="其他" />
+        </el-select>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -50,7 +61,8 @@ function handleChange(val) {
 }
 
 async function handleCreate() {
-  await classesStore.createClass(form.value)
+  const cls = await classesStore.createClass(form.value)
+  classesStore.switchClass(cls.id)
   form.value = { name: "", grade: "" }
   showCreate.value = false
 }

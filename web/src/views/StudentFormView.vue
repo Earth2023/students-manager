@@ -40,7 +40,7 @@
             <el-input v-model="form.parent_phone" placeholder="家长电话" />
           </el-form-item>
           <el-form-item v-if="!isEdit" label="所属班级">
-            <el-select v-model="form.classId" placeholder="选择班级" style="width: 100%">
+            <el-select v-model="form.classId" placeholder="请选择班级" style="width: 100%">
               <el-option v-for="cls in classesStore.list" :key="cls.id" :label="cls.name" :value="cls.id" />
             </el-select>
           </el-form-item>
@@ -95,6 +95,9 @@ const rules = {
 
 onMounted(async () => {
   await classesStore.fetchClasses()
+  if (!isEdit.value && classesStore.currentClassId) {
+    form.classId = classesStore.currentClassId
+  }
   if (isEdit.value) {
     try {
       const data = await studentsApi.get(route.params.id)
@@ -130,7 +133,7 @@ async function handleSubmit() {
     } else {
       await studentsApi.create(payload, form.classId ? { class_id: form.classId } : {})
       ElMessage.success("添加成功")
-      router.push("/students")
+      router.push("/")
     }
   } catch (err) {
     ElMessage.error(err.response?.data?.detail || "操作失败")
@@ -143,7 +146,7 @@ function goBack() {
   if (isEdit.value) {
     router.push(`/students/${route.params.id}`)
   } else {
-    router.push("/students")
+    router.push("/")
   }
 }
 </script>

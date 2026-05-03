@@ -3,6 +3,12 @@ from datetime import date
 from pydantic import BaseModel, Field
 
 
+class StudentClassInfo(BaseModel):
+    id: int
+    name: str
+    grade: str
+
+
 class StudentCreate(BaseModel):
     student_no: str = Field(..., min_length=1, max_length=30)
     name: str = Field(..., min_length=1, max_length=50)
@@ -37,5 +43,6 @@ class StudentInfo(BaseModel):
     parent_name: str
     parent_phone: str
     notes: str
+    classes: list[StudentClassInfo] = []
 
     model_config = {"from_attributes": True}

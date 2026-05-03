@@ -8,6 +8,11 @@
           <span>学号：{{ student.student_no }}</span>
           <span v-if="student.gender"> | {{ student.gender }}</span>
         </div>
+        <div v-if="student.classes && student.classes.length > 0" class="card-classes">
+          <el-tag v-for="c in student.classes" :key="c.id" size="small" style="margin-right: 4px;">
+            {{ c.grade ? c.grade + ' ' : '' }}{{ c.name }}
+          </el-tag>
+        </div>
       </div>
       <el-icon class="card-arrow"><ArrowRight /></el-icon>
     </div>
@@ -42,6 +47,9 @@ defineProps({
   font-size: 13px;
   color: #909399;
   margin-top: 4px;
+}
+.card-classes {
+  margin-top: 6px;
 }
 .card-arrow {
   color: #c0c4cc;

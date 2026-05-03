@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, watch, onMounted } from "vue"
 import AppHeader from "../components/AppHeader.vue"
 import ClassSwitcher from "../components/ClassSwitcher.vue"
 import StudentCard from "../components/StudentCard.vue"
@@ -96,4 +96,9 @@ async function resetSearch() {
   searchForm.value.q = ""
   await loadStudents()
 }
+
+// 切换班级时重新加载
+watch(() => classesStore.currentClassId, () => {
+  if (!searchForm.value.q) loadStudents()
+})
 </script>

@@ -35,6 +35,14 @@
           <el-descriptions-item label="姓名">{{ student.name }}</el-descriptions-item>
           <el-descriptions-item label="性别">{{ student.gender || '-' }}</el-descriptions-item>
           <el-descriptions-item label="出生日期">{{ student.birth_date || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="所属班级">
+            <template v-if="student.classes && student.classes.length > 0">
+              <el-tag v-for="c in student.classes" :key="c.id" size="small" style="margin-right: 4px;">
+                {{ c.grade ? c.grade + ' ' : '' }}{{ c.name }}
+              </el-tag>
+            </template>
+            <span v-else>-</span>
+          </el-descriptions-item>
           <el-descriptions-item label="联系电话">{{ student.phone || '-' }}</el-descriptions-item>
           <el-descriptions-item label="家庭住址">{{ student.address || '-' }}</el-descriptions-item>
           <el-descriptions-item label="家长姓名">{{ student.parent_name || '-' }}</el-descriptions-item>
