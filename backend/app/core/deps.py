@@ -16,7 +16,7 @@ def get_current_user(
     payload = decode_access_token(credentials.credentials)
     if payload is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="无效的认证凭据")
-    teacher_id: int = payload.get("sub")
+    teacher_id = int(payload.get("sub"))
     if teacher_id is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="无效的认证凭据")
     teacher = db.query(Teacher).filter(Teacher.id == teacher_id).first()
