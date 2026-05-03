@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <AppHeader />
     <div class="page-container">
       <el-button text @click="goBack" style="margin-bottom: 16px;">
         <el-icon><ArrowLeft /></el-icon> 返回
@@ -63,7 +62,6 @@
 import { reactive, ref, computed, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { ElMessage } from "element-plus"
-import AppHeader from "../components/AppHeader.vue"
 import { useClassesStore } from "../stores/classes"
 import { studentsApi } from "../api"
 

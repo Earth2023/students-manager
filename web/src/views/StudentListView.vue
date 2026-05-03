@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <AppHeader />
     <div class="page-container">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <h2 style="margin: 0;">学生管理</h2>
@@ -48,7 +47,6 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue"
-import AppHeader from "../components/AppHeader.vue"
 import ClassSwitcher from "../components/ClassSwitcher.vue"
 import StudentCard from "../components/StudentCard.vue"
 import { useClassesStore } from "../stores/classes"

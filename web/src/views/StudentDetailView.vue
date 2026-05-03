@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <AppHeader />
     <div class="page-container">
       <el-button text @click="$router.push('/students')" style="margin-bottom: 16px;">
         <el-icon><ArrowLeft /></el-icon> 返回学生列表
@@ -58,7 +57,6 @@
 import { ref, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { ElMessage, ElMessageBox } from "element-plus"
-import AppHeader from "../components/AppHeader.vue"
 import { studentsApi } from "../api"
 
 const route = useRoute()

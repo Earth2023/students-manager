@@ -1,13 +1,27 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname "$0")"
+REPO_URL="https://github.com/Earth2023/students-manager.git"
+APP_DIR="students-manager"
 
 echo "================================================"
-echo "  学生信息管理系统 — 生产部署"
+echo "  学生信息管理系统 — 安装/启动器"
 echo "================================================"
 echo ""
 
+if [ ! -d "$APP_DIR" ]; then
+    echo "正在从远程仓库拉取代码 ..."
+    git clone "$REPO_URL" "$APP_DIR"
+else
+    echo "正在更新代码 ..."
+    cd "$APP_DIR"
+    git pull
+    cd ..
+fi
+
+cd "$APP_DIR"
+
+echo ""
 echo "[1/3] 安装后端依赖 ..."
 cd backend
 pip install -r requirements.txt

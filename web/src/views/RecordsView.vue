@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <AppHeader />
     <div class="page-container">
       <el-button text @click="$router.push(`/students/${studentId}`)" style="margin-bottom: 16px;">
         <el-icon><ArrowLeft /></el-icon> 返回学生详情
@@ -50,7 +49,6 @@
 import { ref, reactive, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { ElMessage, ElMessageBox } from "element-plus"
-import AppHeader from "../components/AppHeader.vue"
 import RecordTimeline from "../components/RecordTimeline.vue"
 import { recordsApi, studentsApi } from "../api"
 

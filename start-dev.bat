@@ -1,12 +1,37 @@
 @echo off
 chcp 65001 >nul
-cd /d "%~dp0"
+
+set REPO_URL=https://github.com/Earth2023/students-manager.git
+set APP_DIR=students-manager
 
 echo ================================================
 echo  学生信息管理系统 — 开发模式
 echo ================================================
 echo.
 
+if not exist "%APP_DIR%" (
+    echo 正在从远程仓库拉取代码 ...
+    git clone %REPO_URL% %APP_DIR%
+    if %errorlevel% neq 0 (
+        echo 拉取失败，请检查网络连接和 Git 安装
+        pause
+        exit /b 1
+    )
+) else (
+    echo 正在更新代码 ...
+    cd %APP_DIR%
+    git pull
+    if %errorlevel% neq 0 (
+        echo 更新失败
+        pause
+        exit /b 1
+    )
+    cd ..
+)
+
+cd %APP_DIR%
+
+echo.
 echo [1/2] 启动后端 (uvicorn --reload) ...
 start "backend" cmd /c "cd backend && uvicorn app.main:app --reload --host 0.0.0.0 --port 18765"
 
