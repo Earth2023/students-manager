@@ -1,9 +1,18 @@
 import axios from "axios"
+import { Capacitor } from "@capacitor/core"
 
 const http = axios.create({
   baseURL: "/api",
   timeout: 15000,
 })
+
+export function updateBaseURL() {
+  const isNative = Capacitor.isNativePlatform()
+  if (isNative) {
+    const config = window.__APP_CONFIG || { serverUrl: "http://127.0.0.1:18765" }
+    http.defaults.baseURL = `${config.serverUrl}/api`
+  }
+}
 
 http.interceptors.request.use((config) => {
   const token = localStorage.getItem("token")

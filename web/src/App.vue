@@ -1,6 +1,11 @@
 <template>
-  <router-view v-if="!isAuthPage" />
-  <router-view v-else />
+  <template v-if="isAuthPage">
+    <router-view />
+  </template>
+  <template v-else>
+    <AppHeader />
+    <router-view />
+  </template>
 </template>
 
 <script setup>

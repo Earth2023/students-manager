@@ -8,31 +8,71 @@
 
 ## 快速启动
 
-### 1. 启动后端服务
+### 一键启动（推荐）
 
 ```bash
+# 生产模式（构建前端后由后端统一提供服务）
+start.bat                # Windows
+./start.sh               # Linux / macOS
+
+# 开发模式（前后端独立运行，支持热重载）
+start-dev.bat            # Windows
+./start-dev.sh           # Linux / macOS
+```
+
+生产模式访问 http://127.0.0.1:18765
+开发模式访问 http://127.0.0.1:5173
+
+### 手动启动
+
+```bash
+# 终端 1：后端
 cd backend
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 18765
-```
 
-服务默认运行在 `http://127.0.0.1:18765`
-
-在线 API 文档：`http://127.0.0.1:18765/docs`
-
-### 2. 启动前端服务
-
-新开一个终端：
-
-```bash
+# 终端 2：前端（仅开发模式需要）
 cd web
 npm install
 npm run dev
 ```
 
-服务默认运行在 `http://127.0.0.1:5173`
+## Android 客户端
 
-前端开发服务器已配置代理，`/api` 请求自动转发到后端。
+### 构建 APK
+
+```bash
+cd web && npm run build      # 构建前端
+npx cap sync android         # 同步到 Android 项目
+cd ../android && ./gradlew assembleDebug   # 构建 APK
+```
+
+APK 路径：`android/app/build/outputs/apk/debug/app-debug.apk`
+
+### 配置服务端地址
+
+编辑 `web/public/server-config.json`：
+
+```json
+{
+  "serverUrl": "http://192.168.1.100:18765"
+}
+```
+
+重新构建后生效。也可在 app 运行时通过设置页面修改（地址保存在 localStorage）。
+
+### 安装到模拟器（MuMu 12）
+
+```bash
+# 连接 MuMu
+adb connect 127.0.0.1:16384
+
+# 端口转发（模拟器 → 宿主机）
+adb -s 127.0.0.1:16384 reverse tcp:18765 tcp:18765
+
+# 安装 APK
+adb -s 127.0.0.1:16384 install -r android/app/build/outputs/apk/debug/app-debug.apk
+```
 
 ---
 
@@ -44,7 +84,7 @@ npm run dev
 
 ### 第一步：注册教师账号
 
-1. 浏览器打开 `http://127.0.0.1:5173`
+1. 在浏览器打开（生产模式 `http://127.0.0.1:18765`，开发模式 `http://127.0.0.1:5173`）
 2. 点击 **"立即注册"**
 3. 填写用户名、姓名、密码（至少 6 位）、联系电话（选填）
 4. 提交后自动登录跳转到控制台
@@ -64,7 +104,7 @@ npm run dev
 - 提交
 
 #### 方式二：从学生管理页添加
-- 左侧导航进入 **"学生管理"**
+- 顶部导航进入 **"学生管理"**
 - 点击右上角 **"添加学生"**
 
 ### 第四步：查看与管理学生
@@ -104,3 +144,4 @@ npm run dev
 - 删除学生操作不可恢复
 - 档案记录按创建时间倒序排列
 - 开发环境使用 SQLite 数据库（`backend/student_ms.db`），重启服务数据不丢失
+- 生产部署建议修改 `backend/app/config.py` 中的 `SECRET_KEY` 和 `DATABASE_URL`

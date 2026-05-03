@@ -1,5 +1,17 @@
 # 版本日志
 
+## v1.2.0 (2026-05-03)
+
+### 重构与规范化
+
+- **目录重组**: Android 项目从 `web/android/` 独立到根级 `android/`，Capacitor 配置同步更新
+- **模板修复**: App.vue 移除未使用的 import 和冗余条件分支，正确渲染导航栏
+- **生产部署**: 后端自动挂载前端静态文件，`start.bat` / `start.sh` 一键启动
+- **部署脚本**: 新增 `start.bat`（生产）、`start-dev.bat`（开发）、对应 Unix Shell 脚本
+- **文档**: 全面更新 README、USAGE、项目结构图
+
+---
+
 ## v1.1.0 (2026-05-03)
 
 ### 修复与优化
@@ -10,6 +22,7 @@
 - **班级选择优化**: 新增学生表单班级默认选中当前班级，占位文本统一为"请选择班级"
 - **学生列表增强**: 切换班级时自动重新加载学生列表
 - **后端 API**: StudentInfo 响应新增 `classes` 字段返回班级和年级信息
+- **Android 客户端**: Capacitor 封装，支持 MuMu 等模拟器
 
 ---
 
@@ -29,31 +42,3 @@
 - 实现学生管理页面（列表搜索、新增、编辑、详情）
 - 实现档案记录时间线页面
 - 配置前端开发代理与 Element Plus UI
-
-### 技术选型
-
-| 类别 | 选型 |
-|------|------|
-| 后端框架 | FastAPI |
-| 数据库 ORM | SQLAlchemy 2.0 + SQLite |
-| 认证 | JWT (python-jose) + bcrypt |
-| 前端框架 | Vue 3 + Vite |
-| UI 组件 | Element Plus |
-| 状态管理 | Pinia |
-| HTTP 客户端 | Axios |
-
----
-
-## 后续规划
-
-### v1.1.0
-
-- Android 客户端接入
-- 学生头像上传
-- Excel/CSV 数据导出
-
-### v1.2.0
-
-- 批量导入学生
-- 数据库切换 PostgreSQL
-- 权限分级

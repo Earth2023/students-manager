@@ -1,0 +1,8 @@
+{
+  "appId": "com.studentms.app",
+  "appName": "学生信息管理系统",
+  "webDir": "dist",
+  "android": {
+    "path": "../android"
+  }
+}

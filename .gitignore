@@ -6,3 +6,13 @@ __pycache__/
 log.txt
 node_modules/
 dist/
+.claude/
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/
+android/local.properties
+*.apk
+*.aab
