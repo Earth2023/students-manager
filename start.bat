@@ -18,6 +18,15 @@ if not exist "%APP_DIR%" (
         pause
         exit /b 1
     )
+) else if not exist "%APP_DIR%\.git" (
+    echo 目录不完整，重新拉取 ...
+    rmdir /s /q "%APP_DIR%"
+    %GIT_CMD% clone %REPO_URL% %APP_DIR%
+    if %errorlevel% neq 0 (
+        echo 拉取失败
+        pause
+        exit /b 1
+    )
 ) else (
     echo 正在更新代码 ...
     %GIT_CMD% -C %APP_DIR% pull

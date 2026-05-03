@@ -13,6 +13,10 @@ echo ""
 if [ ! -d "$APP_DIR" ]; then
     echo "正在从远程仓库拉取代码 ..."
     $GIT_CMD clone "$REPO_URL" "$APP_DIR"
+elif [ ! -d "$APP_DIR/.git" ]; then
+    echo "目录不完整，重新拉取 ..."
+    rm -rf "$APP_DIR"
+    $GIT_CMD clone "$REPO_URL" "$APP_DIR"
 else
     echo "正在更新代码 ..."
     $GIT_CMD -C "$APP_DIR" pull
