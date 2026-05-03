@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
+cd "$(dirname "$0")"
+
 REPO_URL="https://github.com/Earth2023/students-manager.git"
-APP_DIR="students-manager"
 GIT_CMD="git -c http.sslVerify=false"
 
 echo "================================================"
@@ -10,19 +11,18 @@ echo "  学生信息管理系统 — 安装/启动器"
 echo "================================================"
 echo ""
 
-if [ ! -d "$APP_DIR" ]; then
-    echo "正在从远程仓库拉取代码 ..."
-    $GIT_CMD clone "$REPO_URL" "$APP_DIR"
-elif [ ! -d "$APP_DIR/.git" ]; then
-    echo "目录不完整，重新拉取 ..."
-    rm -rf "$APP_DIR"
-    $GIT_CMD clone "$REPO_URL" "$APP_DIR"
-else
+if [ -d ".git" ]; then
     echo "正在更新代码 ..."
-    $GIT_CMD -C "$APP_DIR" pull
+    $GIT_CMD pull
+elif [ -d "students-manager/.git" ]; then
+    cd students-manager
+    echo "正在更新代码 ..."
+    $GIT_CMD pull
+else
+    echo "正在从远程仓库拉取代码 ..."
+    $GIT_CMD clone "$REPO_URL" students-manager
+    cd students-manager
 fi
-
-cd "$APP_DIR"
 
 echo ""
 echo "[1/3] 安装后端依赖 ..."
