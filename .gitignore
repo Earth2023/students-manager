@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*.db
+.env
+.vscode/
+log.txt
+node_modules/
+dist/
