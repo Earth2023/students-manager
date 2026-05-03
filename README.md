@@ -29,12 +29,12 @@
 ```bash
 cd backend
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 18765
 ```
 
-服务运行在 http://127.0.0.1:8000
+服务运行在 http://127.0.0.1:18765
 
-交互式 API 文档：http://127.0.0.1:8000/docs
+交互式 API 文档：http://127.0.0.1:18765/docs
 
 ### 前端
 

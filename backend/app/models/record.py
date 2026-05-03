@@ -1,9 +1,14 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+
+def beijing_now() -> datetime:
+    """返回带 UTC+8 时区的当前时间"""
+    return datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=8)
 
 
 class StudentRecord(Base):
@@ -18,7 +23,7 @@ class StudentRecord(Base):
         String(20), default="其他", comment="记录类型: 学业/行为/健康/其他"
     )
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=lambda: datetime.now(timezone.utc), comment="创建时间"
+        DateTime, default=beijing_now, comment="创建时间 (UTC+8)"
     )
 
     student = relationship("Student", back_populates="records")

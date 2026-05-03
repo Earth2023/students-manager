@@ -1,6 +1,6 @@
 # API 文档
 
-基础地址：`http://127.0.0.1:8000/api`
+基础地址：`http://127.0.0.1:18765/api`
 
 认证方式：`Authorization: Bearer <token>`
 
@@ -316,4 +316,4 @@ DELETE /records/{record_id}
 
 ---
 
-在线 API 文档 (Swagger UI)：`http://127.0.0.1:8000/docs`
+在线 API 文档 (Swagger UI)：`http://127.0.0.1:18765/docs`

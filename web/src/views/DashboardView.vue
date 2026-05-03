@@ -72,7 +72,6 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue"
-import { ElMessage } from "element-plus"
 import AppHeader from "../components/AppHeader.vue"
 import ClassSwitcher from "../components/ClassSwitcher.vue"
 import StudentCard from "../components/StudentCard.vue"
@@ -85,6 +84,21 @@ const classesStore = useClassesStore()
 const students = ref([])
 const totalRecords = ref(0)
 
+async function loadClassData(classId) {
+  if (!classId) return
+  const ids = await classesApi.studentIds(classId)
+  const promises = ids.map((id) => studentsApi.get(id).catch(() => null))
+  students.value = (await Promise.all(promises)).filter(Boolean)
+  let count = 0
+  for (const s of students.value) {
+    try {
+      const records = await recordsApi.list(s.id)
+      count += records.length
+    } catch { /* ignore */ }
+  }
+  totalRecords.value = count
+}
+
 onMounted(async () => {
   if (!authStore.teacher) {
     await authStore.fetchTeacher()
@@ -92,29 +106,12 @@ onMounted(async () => {
   await classesStore.fetchClasses()
   if (classesStore.list.length > 0 && !classesStore.currentClassId) {
     classesStore.switchClass(classesStore.list[0].id)
+  } else if (classesStore.currentClassId) {
+    await loadClassData(classesStore.currentClassId)
   }
 })
 
-watch(
-  () => classesStore.currentClassId,
-  async (classId) => {
-    if (!classId) return
-    const ids = await classesApi.studentIds(classId)
-    // Fetch full student info for each ID
-    const promises = ids.map((id) => studentsApi.get(id).catch(() => null))
-    students.value = (await Promise.all(promises)).filter(Boolean)
-    // Count records
-    let count = 0
-    for (const s of students.value) {
-      try {
-        const records = await recordsApi.list(s.id)
-        count += records.length
-      } catch { /* ignore */ }
-    }
-    totalRecords.value = count
-  },
-)
-
+watch(() => classesStore.currentClassId, loadClassData)
 </script>
 
 <style scoped>
