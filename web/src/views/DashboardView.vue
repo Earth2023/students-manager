@@ -85,18 +85,27 @@ const students = ref([])
 const totalRecords = ref(0)
 
 async function loadClassData(classId) {
-  if (!classId) return
-  const ids = await classesApi.studentIds(classId)
-  const promises = ids.map((id) => studentsApi.get(id).catch(() => null))
-  students.value = (await Promise.all(promises)).filter(Boolean)
-  let count = 0
-  for (const s of students.value) {
-    try {
-      const records = await recordsApi.list(s.id)
-      count += records.length
-    } catch { /* ignore */ }
+  if (!classId) {
+    students.value = []
+    totalRecords.value = 0
+    return
   }
-  totalRecords.value = count
+  try {
+    const ids = await classesApi.studentIds(classId)
+    const promises = ids.map((id) => studentsApi.get(id).catch(() => null))
+    students.value = (await Promise.all(promises)).filter(Boolean)
+    let count = 0
+    for (const s of students.value) {
+      try {
+        const records = await recordsApi.list(s.id)
+        count += records.length
+      } catch { /* ignore */ }
+    }
+    totalRecords.value = count
+  } catch {
+    students.value = []
+    totalRecords.value = 0
+  }
 }
 
 onMounted(async () => {
@@ -104,14 +113,19 @@ onMounted(async () => {
     await authStore.fetchTeacher()
   }
   await classesStore.fetchClasses()
-  if (classesStore.list.length > 0 && !classesStore.currentClassId) {
-    classesStore.switchClass(classesStore.list[0].id)
-  } else if (classesStore.currentClassId) {
+  if (classesStore.list.length > 0) {
+    if (!classesStore.currentClassId) {
+      classesStore.switchClass(classesStore.list[0].id)
+    }
+    // 无论是刚选中还是已有选中，都主动加载数据
     await loadClassData(classesStore.currentClassId)
   }
 })
 
-watch(() => classesStore.currentClassId, loadClassData)
+// 切换班级时重新加载
+watch(() => classesStore.currentClassId, (classId) => {
+  loadClassData(classId)
+})
 </script>
 
 <style scoped>
