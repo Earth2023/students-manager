@@ -19,6 +19,7 @@ class Student(Base):
     parent_name: Mapped[str] = mapped_column(String(50), default="", comment="家长姓名")
     parent_phone: Mapped[str] = mapped_column(String(20), default="", comment="家长电话")
     notes: Mapped[str] = mapped_column(Text, default="", comment="备注")
+    avatar: Mapped[str] = mapped_column(String(255), default="", comment="头像文件名")
 
     class_links = relationship("StudentClass", back_populates="student", cascade="all, delete-orphan")
     records = relationship("StudentRecord", back_populates="student", cascade="all, delete-orphan")

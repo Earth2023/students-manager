@@ -15,7 +15,13 @@
           <span style="margin-left: auto; font-size: 12px; color: #909399;">
             {{ record.teacher_name }}
           </span>
-          <el-button text type="danger" size="small" @click="handleDelete(record.id)" style="margin-left: 8px;">
+          <span v-if="record.updated_at && record.updated_at !== record.created_at" style="margin-left: 8px; font-size: 11px; color: #c0c4cc;">
+            已编辑
+          </span>
+          <el-button text type="primary" size="small" @click="handleEdit(record)" style="margin-left: 8px;">
+            编辑
+          </el-button>
+          <el-button text type="danger" size="small" @click="handleDelete(record.id)">
             删除
           </el-button>
         </div>
@@ -29,7 +35,7 @@
 const props = defineProps({
   records: { type: Array, required: true },
 })
-const emit = defineEmits(["delete"])
+const emit = defineEmits(["delete", "edit"])
 
 function tagType(type) {
   const map = { 学业: "primary", 行为: "warning", 健康: "success", 其他: "info" }
@@ -44,11 +50,17 @@ function formatTime(t) {
 function handleDelete(id) {
   emit("delete", id)
 }
+
+function handleEdit(record) {
+  emit("edit", record)
+}
 </script>
 
 <style scoped>
 .record-header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 </style>

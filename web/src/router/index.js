@@ -7,6 +7,7 @@ import StudentListView from "../views/StudentListView.vue"
 import StudentDetailView from "../views/StudentDetailView.vue"
 import StudentFormView from "../views/StudentFormView.vue"
 import RecordsView from "../views/RecordsView.vue"
+import SettingsView from "../views/SettingsView.vue"
 
 const routes = [
   { path: "/login", name: "Login", component: LoginView, meta: { guest: true } },
@@ -17,6 +18,7 @@ const routes = [
   { path: "/students/:id", name: "StudentDetail", component: StudentDetailView, meta: { requiresAuth: true } },
   { path: "/students/:id/edit", name: "StudentEdit", component: StudentFormView, meta: { requiresAuth: true } },
   { path: "/students/:id/records", name: "StudentRecords", component: RecordsView, meta: { requiresAuth: true } },
+  { path: "/settings", name: "Settings", component: SettingsView, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

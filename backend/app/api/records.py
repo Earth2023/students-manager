@@ -12,6 +12,21 @@ router = APIRouter(prefix="/api/students/{student_id}/records", tags=["档案记
 global_router = APIRouter(prefix="/api/records", tags=["档案记录"])
 
 
+def _record_to_info(r):
+    t = r.teacher
+    return RecordInfo(
+        id=r.id,
+        student_id=r.student_id,
+        teacher_id=r.teacher_id,
+        teacher_name=t.name if t else "",
+        title=r.title,
+        content=r.content,
+        record_type=r.record_type,
+        created_at=r.created_at,
+        updated_at=r.updated_at,
+    )
+
+
 @router.get("", response_model=list[RecordInfo])
 def list_records(
     student_id: int,
@@ -26,22 +41,7 @@ def list_records(
         .order_by(StudentRecord.created_at.desc())
         .all()
     )
-    result = []
-    for r in records:
-        t = r.teacher
-        result.append(
-            RecordInfo(
-                id=r.id,
-                student_id=r.student_id,
-                teacher_id=r.teacher_id,
-                teacher_name=t.name if t else "",
-                title=r.title,
-                content=r.content,
-                record_type=r.record_type,
-                created_at=r.created_at,
-            )
-        )
-    return result
+    return [_record_to_info(r) for r in records]
 
 
 @router.post("", response_model=RecordInfo, status_code=status.HTTP_201_CREATED)
@@ -65,16 +65,7 @@ def create_record(
     db.add(record)
     db.commit()
     db.refresh(record)
-    return RecordInfo(
-        id=record.id,
-        student_id=record.student_id,
-        teacher_id=record.teacher_id,
-        teacher_name=teacher.name,
-        title=record.title,
-        content=record.content,
-        record_type=record.record_type,
-        created_at=record.created_at,
-    )
+    return _record_to_info(record)
 
 
 @router.put("/{record_id}", response_model=RecordInfo)
@@ -99,17 +90,7 @@ def update_record(
         setattr(record, key, value)
     db.commit()
     db.refresh(record)
-    teacher = record.teacher
-    return RecordInfo(
-        id=record.id,
-        student_id=record.student_id,
-        teacher_id=record.teacher_id,
-        teacher_name=teacher.name if teacher else "",
-        title=record.title,
-        content=record.content,
-        record_type=record.record_type,
-        created_at=record.created_at,
-    )
+    return _record_to_info(record)
 
 
 @router.delete("/{record_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -147,17 +128,7 @@ def update_record_global(
         setattr(record, key, value)
     db.commit()
     db.refresh(record)
-    t = record.teacher
-    return RecordInfo(
-        id=record.id,
-        student_id=record.student_id,
-        teacher_id=record.teacher_id,
-        teacher_name=t.name if t else "",
-        title=record.title,
-        content=record.content,
-        record_type=record.record_type,
-        created_at=record.created_at,
-    )
+    return _record_to_info(record)
 
 
 @global_router.delete("/{record_id}", status_code=status.HTTP_204_NO_CONTENT)

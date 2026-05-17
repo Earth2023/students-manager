@@ -43,6 +43,20 @@ class StudentInfo(BaseModel):
     parent_name: str
     parent_phone: str
     notes: str
+    avatar: str = ""
     classes: list[StudentClassInfo] = []
 
     model_config = {"from_attributes": True}
+
+
+class StudentSearchResult(BaseModel):
+    items: list[StudentInfo]
+    total: int
+    page: int
+    page_size: int
+
+
+class ImportResult(BaseModel):
+    success: int
+    failed: int
+    errors: list[str]

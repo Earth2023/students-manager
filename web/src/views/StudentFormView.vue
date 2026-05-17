@@ -11,6 +11,26 @@
         </template>
 
         <el-form ref="formRef" :model="form" :rules="rules" label-width="100px" style="max-width: 600px;">
+          <el-form-item v-if="isEdit" label="头像">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <el-avatar :size="64" :src="avatarPreview">
+                {{ form.name ? form.name.charAt(0) : '?' }}
+              </el-avatar>
+              <el-upload
+                :show-file-list="false"
+                :auto-upload="false"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                :on-change="handleLocalAvatar"
+              >
+                <el-button size="small">
+                  <el-icon><Camera /></el-icon> {{ avatarFile ? '更换图片' : '选择图片' }}
+                </el-button>
+              </el-upload>
+              <el-button v-if="avatarFile" size="small" @click="uploadAvatar">
+                保存头像
+              </el-button>
+            </div>
+          </el-form-item>
           <el-form-item label="学号" prop="student_no">
             <el-input v-model="form.student_no" placeholder="请输入学号" :disabled="isEdit" />
           </el-form-item>
@@ -91,6 +111,26 @@ const rules = {
   name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
 }
 
+// 头像上传（编辑模式）
+const avatarFile = ref(null)
+const avatarPreview = ref("")
+
+function handleLocalAvatar(uploadFile) {
+  avatarFile.value = uploadFile.raw
+  avatarPreview.value = URL.createObjectURL(uploadFile.raw)
+}
+
+async function uploadAvatar() {
+  if (!avatarFile.value) return
+  try {
+    const updated = await studentsApi.uploadAvatar(route.params.id, avatarFile.value)
+    ElMessage.success("头像上传成功")
+    avatarFile.value = null
+  } catch (err) {
+    ElMessage.error(err.response?.data?.detail || "头像上传失败")
+  }
+}
+
 onMounted(async () => {
   await classesStore.fetchClasses()
   if (!isEdit.value && classesStore.currentClassId) {
@@ -110,6 +150,9 @@ onMounted(async () => {
         parent_phone: data.parent_phone,
         notes: data.notes,
       })
+      if (data.avatar) {
+        avatarPreview.value = `/uploads/avatars/${data.avatar}`
+      }
     } catch {
       ElMessage.error("获取学生信息失败")
       router.push("/students")

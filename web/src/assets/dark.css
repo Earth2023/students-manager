@@ -1,0 +1,115 @@
+/* ===== 暗色模式全局样式 ===== */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+}
+
+html.dark .app-container {
+  background-color: #1a1a2e;
+}
+
+html.dark .page-container {
+  background-color: transparent;
+}
+
+html.dark .el-card {
+  background-color: #16213e;
+  border-color: #0f3460;
+}
+
+html.dark .el-card__header {
+  border-bottom-color: #0f3460;
+}
+
+html.dark .el-menu--horizontal {
+  background-color: #16213e;
+  border-bottom-color: #0f3460;
+}
+
+html.dark .el-menu--horizontal .el-menu-item {
+  color: #e0e0e0;
+  background-color: #16213e !important;
+}
+
+html.dark .el-menu--horizontal .el-menu-item:hover,
+html.dark .el-menu--horizontal .el-menu-item.is-active {
+  background-color: #0f3460 !important;
+  color: #409eff !important;
+}
+
+html.dark .el-descriptions__title,
+html.dark .el-descriptions__label,
+html.dark .el-descriptions__content {
+  color: #e0e0e0 !important;
+}
+
+html.dark .el-descriptions__body {
+  background-color: #16213e !important;
+}
+
+html.dark .el-descriptions__cell {
+  border-color: #0f3460 !important;
+}
+
+html.dark .el-form-item__label {
+  color: #c0c4d0;
+}
+
+html.dark .el-table {
+  background-color: #16213e;
+  color: #e0e0e0;
+}
+
+html.dark .el-table th.el-table__cell {
+  background-color: #0f3460;
+}
+
+html.dark .el-table--border .el-table__cell {
+  border-color: #0f3460;
+}
+
+html.dark .el-table__body tr:hover > td {
+  background-color: #1a2740;
+}
+
+html.dark .el-dropdown-menu {
+  background-color: #16213e;
+  border-color: #0f3460;
+}
+
+html.dark .el-dropdown-menu__item {
+  color: #e0e0e0;
+}
+
+html.dark .el-dropdown-menu__item:hover {
+  background-color: #0f3460;
+  color: #409eff;
+}
+
+html.dark .el-dialog {
+  background-color: #16213e;
+}
+
+html.dark .el-dialog__title {
+  color: #e0e0e0;
+}
+
+html.dark .el-dialog__body {
+  color: #c0c4d0;
+}
+
+html.dark .stat-value {
+  color: #64b5f6 !important;
+}
+
+html.dark h2, html.dark h3, html.dark h4 {
+  color: #e0e0e0;
+}
+
+html.dark .el-space {
+  --el-space-base: 8px;
+}

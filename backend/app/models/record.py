@@ -1,6 +1,6 @@
 from datetime import datetime, timezone, timedelta
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -27,4 +27,8 @@ class StudentRecord(Base):
     )
 
     student = relationship("Student", back_populates="records")
+    updated_at: Mapped[datetime | None] = mapped_column(
+        DateTime, nullable=True, onupdate=beijing_now, comment="最后更新时间 (UTC+8)"
+    )
+
     teacher = relationship("Teacher")

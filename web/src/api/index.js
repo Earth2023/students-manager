@@ -37,6 +37,9 @@ export const authApi = {
   login: (data) => http.post("/auth/login", data).then((r) => r.data),
   register: (data) => http.post("/auth/register", data).then((r) => r.data),
   me: () => http.get("/auth/me").then((r) => r.data),
+  getProfile: () => http.get("/auth/profile").then((r) => r.data),
+  updateProfile: (data) => http.put("/auth/profile", data).then((r) => r.data),
+  changePassword: (data) => http.put("/auth/password", data).then((r) => r.data),
 }
 
 export const classesApi = {
@@ -51,6 +54,18 @@ export const studentsApi = {
   get: (id) => http.get(`/students/${id}`).then((r) => r.data),
   update: (id, data) => http.put(`/students/${id}`, data).then((r) => r.data),
   delete: (id) => http.delete(`/students/${id}`),
+  uploadAvatar: (id, file) => {
+    const fd = new FormData()
+    fd.append("file", file)
+    return http.post(`/students/${id}/avatar`, fd).then((r) => r.data)
+  },
+  exportCsv: (classId) => http.get(`/students/export/csv`, { params: { class_id: classId }, responseType: "blob" }).then((r) => r.data),
+  importCsv: (file, classId) => {
+    const fd = new FormData()
+    fd.append("file", file)
+    return http.post(`/students/import`, fd, { params: { class_id: classId } }).then((r) => r.data)
+  },
+  getStats: (id) => http.get(`/students/${id}/stats`).then((r) => r.data),
 }
 
 export const recordsApi = {

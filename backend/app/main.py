@@ -9,7 +9,7 @@ from app.database import Base, engine
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="学生信息管理系统", version="1.2.0")
+app = FastAPI(title="学生信息管理系统", version="1.3.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,6 +24,11 @@ app.include_router(classes.router)
 app.include_router(students.router)
 app.include_router(records.router)
 app.include_router(records.global_router)
+
+# 挂载上传目录（头像等）
+uploads_dir = Path(__file__).resolve().parent.parent / "uploads"
+uploads_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
 
 # 生产模式：挂载前端构建产物（API 路由优先）
 frontend_dir = Path(__file__).resolve().parent.parent.parent / "web" / "dist"

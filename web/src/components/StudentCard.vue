@@ -1,7 +1,7 @@
 <template>
   <el-card shadow="hover" class="student-card" @click="$router.push(`/students/${student.id}`)">
     <div class="card-content">
-      <el-avatar :size="48">{{ student.name.charAt(0) }}</el-avatar>
+      <el-avatar :size="48" :src="avatarUrl">{{ student.name.charAt(0) }}</el-avatar>
       <div class="card-info">
         <div class="card-name">{{ student.name }}</div>
         <div class="card-meta">
@@ -20,8 +20,17 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue"
+
+const props = defineProps({
   student: { type: Object, required: true },
+})
+
+const avatarUrl = computed(() => {
+  if (props.student.avatar) {
+    return `/uploads/avatars/${props.student.avatar}`
+  }
+  return ""
 })
 </script>
 

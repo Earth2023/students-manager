@@ -26,5 +26,11 @@ class RecordInfo(BaseModel):
     content: str
     record_type: str
     created_at: datetime
+    updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
+
+
+class RecordStats(BaseModel):
+    total: int
+    by_type: dict[str, int]

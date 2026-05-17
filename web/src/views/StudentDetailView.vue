@@ -7,15 +7,27 @@
 
       <el-card v-if="student" shadow="never">
         <template #header>
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span>
-              <el-avatar :size="40" style="margin-right: 12px; vertical-align: middle;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="display: flex; align-items: center; gap: 12px;">
+              <el-avatar :size="48" :src="avatarUrl">
                 {{ student.name.charAt(0) }}
               </el-avatar>
-              <strong style="font-size: 18px;">{{ student.name }}</strong>
-              <el-tag style="margin-left: 12px;" size="small">{{ student.student_no }}</el-tag>
+              <div>
+                <strong style="font-size: 18px;">{{ student.name }}</strong>
+                <el-tag style="margin-left: 12px;" size="small">{{ student.student_no }}</el-tag>
+              </div>
             </span>
-            <el-space>
+            <el-space wrap>
+              <el-upload
+                :show-file-list="false"
+                :auto-upload="false"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                :on-change="handleAvatarChange"
+              >
+                <el-button size="small">
+                  <el-icon><Camera /></el-icon> 上传头像
+                </el-button>
+              </el-upload>
               <el-button type="primary" @click="$router.push(`/students/${student.id}/edit`)">
                 <el-icon><Edit /></el-icon> 编辑
               </el-button>
@@ -48,13 +60,25 @@
           <el-descriptions-item label="家长电话">{{ student.parent_phone || '-' }}</el-descriptions-item>
           <el-descriptions-item label="备注" :span="2">{{ student.notes || '-' }}</el-descriptions-item>
         </el-descriptions>
+
+        <!-- 档案统计 -->
+        <div v-if="stats" style="margin-top: 20px;">
+          <el-divider />
+          <h4 style="margin: 0 0 12px 0;">档案记录统计</h4>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <el-tag v-for="(count, type) in stats.by_type" :key="type" :type="tagType(type)" size="large">
+              {{ type }}: {{ count }} 条
+            </el-tag>
+            <el-tag type="info" size="large">总计: {{ stats.total }} 条</el-tag>
+          </div>
+        </div>
       </el-card>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, computed, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { studentsApi } from "../api"
@@ -62,15 +86,39 @@ import { studentsApi } from "../api"
 const route = useRoute()
 const router = useRouter()
 const student = ref(null)
+const stats = ref(null)
+
+const avatarUrl = computed(() => {
+  if (student.value?.avatar) {
+    return `/uploads/avatars/${student.value.avatar}`
+  }
+  return ""
+})
+
+function tagType(type) {
+  const map = { 学业: "primary", 行为: "warning", 健康: "success", 其他: "info" }
+  return map[type] || "info"
+}
 
 onMounted(async () => {
   try {
     student.value = await studentsApi.get(route.params.id)
+    stats.value = await studentsApi.getStats(route.params.id)
   } catch {
     ElMessage.error("获取学生信息失败")
     router.push("/students")
   }
 })
+
+async function handleAvatarChange(uploadFile) {
+  try {
+    const updated = await studentsApi.uploadAvatar(route.params.id, uploadFile.raw)
+    student.value = updated
+    ElMessage.success("头像上传成功")
+  } catch (err) {
+    ElMessage.error(err.response?.data?.detail || "头像上传失败")
+  }
+}
 
 async function handleDelete() {
   try {

@@ -25,3 +25,13 @@ class TeacherInfo(BaseModel):
     phone: str
 
     model_config = {"from_attributes": True}
+
+
+class ProfileUpdate(BaseModel):
+    name: str | None = Field(default=None, max_length=50)
+    phone: str | None = Field(default=None, max_length=20)
+
+
+class PasswordChange(BaseModel):
+    old_password: str = Field(..., min_length=6, max_length=128)
+    new_password: str = Field(..., min_length=6, max_length=128)
